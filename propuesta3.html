@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Baby Shower - Tour Tipo Juego</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #d1f0ff;
+            display: flex; justify-content: center;
+            height: 100vh;
+        }
+
+        #app-container {
+            width: 100%; max-width: 400px;
+            background-color: #d1f0ff; position: relative;
+            height: 100%; overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* ----- BOTÓN DE REGRESO AL INDEX (ARRIBA) ----- */
+        .top-back-bar {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center;
+            box-sizing: border-box;
+            z-index: 25;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            background-color: #ffffff;
+            color: #1a365d;
+            border: 1px solid #cbd5e0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #ebf8ff;
+            border-color: #3182ce;
+            color: #3182ce;
+        }
+
+        #content-area {
+            padding: 20px; text-align: center;
+            color: #1a365d; height: calc(100% - 130px);
+            margin-top: 45px; /* Espacio para que no choque con la barra de arriba */
+            overflow-y: auto;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+
+        .title { font-size: 24px; font-weight: bold; font-style: italic; }
+
+        /* ----- NAVBAR INFERIOR ----- */
+        .bottom-navbar {
+            position: absolute; bottom: 0; width: 100%;
+            background-color: #ffffff;
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            display: flex; flex-direction: column;
+            z-index: 10;
+        }
+
+        .progress-section {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 20px; border-bottom: 1px solid #f0f0f0;
+            font-size: 13px; color: #4a5568; font-weight: 600;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1; height: 6px; background-color: #e2e8f0;
+            border-radius: 4px; margin: 0 15px;
+        }
+
+        .progress-bar-fill { height: 100%; width: 25%; background-color: #3182ce; border-radius: 4px; }
+
+        .tabs-section { display: flex; justify-content: space-around; padding: 10px 0 15px 0; }
+
+        .tab-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #a0aec0; font-size: 11px; cursor: pointer;
+            position: relative; transition: 0.3s;
+        }
+
+        .icon-container {
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .tab-item svg { width: 24px; height: 24px; fill: currentColor; }
+        
+        .tab-item.active { color: #3182ce; }
+        .tab-item.active .badge { display: block; }
+        
+        .badge {
+            display: none; position: absolute; top: -2px; right: 0px;
+            background-color: #3182ce; color: white; border-radius: 50%;
+            width: 14px; height: 14px; font-size: 9px; line-height: 14px;
+            text-align: center; border: 2px solid white; z-index: 5;
+        }
+
+        /* ----- ESTILOS DEL TOUR TIPO JUEGO ----- */
+        .tour-tooltip {
+            position: absolute;
+            background-color: #ffffff;
+            color: #1a365d;
+            border: 2px solid #1a365d;
+            padding: 15px;
+            border-radius: 12px;
+            width: 220px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            z-index: 100;
+            font-size: 14px;
+            font-weight: 500;
+            display: none;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: left 0.3s ease;
+        }
+
+        .tour-text { margin: 0 0 12px 0; line-height: 1.3; text-align: center;}
+
+        .tour-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tour-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .tour-btn:hover { opacity: 0.8; }
+        .tour-btn-atras { background-color: #e2e8f0; color: #4a5568; padding: 6px 10px; }
+        .tour-btn-saltar { background-color: #e2e8f0; color: #4a5568; }
+        .tour-btn-siguiente { background-color: #3182ce; color: #ffffff; }
+
+        .tour-arrow {
+            position: absolute;
+            bottom: -48px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 50px;
+            pointer-events: none;
+        }
+
+        .tour-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 5;
+            display: none;
+        }
+
+        .highlighted-icon {
+            z-index: 20 !important;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(252, 229, 136, 1), 0 0 0 8px rgba(252, 229, 136, 0.4);
+            animation: pulseGlow 1.2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 0 2px #FCE588, 0 0 0 6px rgba(252, 229, 136, 0.4); }
+            to { box-shadow: 0 0 0 6px #FCE588, 0 0 0 12px rgba(252, 229, 136, 0.1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        
+        <div class="top-back-bar">
+            <a href="index.html" class="back-btn">
+                &larr; Volver al Menú
+            </a>
+        </div>
+
+        <div id="tour-overlay" class="tour-overlay"></div>
+
+        <div id="content-area">
+            <h1 class="title">Mi Baby Shower</h1>
+            <p>Contenido de la sección: <strong id="current-section">Inicio</strong></p>
+            <button onclick="reiniciarTour()" style="margin-top: 20px; padding: 10px; font-size: 12px; cursor:pointer;">Reiniciar Tour (Pruebas)</button>
+        </div>
+
+        <div id="tour-tooltip" class="tour-tooltip">
+            <p id="tour-text" class="tour-text">Primero, confirma tu asistencia. ¡Danos tu 'check'!</p>
+            <div class="tour-buttons">
+                <button id="btn-atras" class="tour-btn tour-btn-atras" onclick="pasoAnterior()">&lt;</button>
+                <button id="btn-saltar" class="tour-btn tour-btn-saltar" onclick="cerrarTour()">Saltar</button>
+                <button id="btn-siguiente" class="tour-btn tour-btn-siguiente" onclick="pasoSiguiente()">Siguiente</button>
+            </div>
+            
+            <svg class="tour-arrow" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 35 0 C 45 25, 30 45, 15 50 M 15 50 L 22 42 M 15 50 L 25 55" stroke="#1a365d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M 35 0 C 45 25, 30 45, 15 50 M 15 50 L 22 42 M 15 50 L 25 55" stroke="#FCE588" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+
+        <div class="bottom-navbar" id="navbar">
+            <div class="progress-section">
+                <span class="progress-text">Mi progreso <span id="progreso-texto" style="color:#2d3748; margin-left:4px;">1/4</span></span>
+                <div class="progress-bar-container">
+                    <div id="progreso-barra" class="progress-bar-fill"></div>
+                </div>
+                <div class="help-icon">?</div>
+            </div>
+
+            <div class="tabs-section">
+                <div class="tab-item active" id="tab-inicio" onclick="changeTab(this, 'Inicio')">
+                    <div class="icon-container">
+                        <div class="badge">✓</div>
+                        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    </div>
+                    <span>Inicio</span>
+                </div>
+                
+                <div class="tab-item" id="tab-asistencia" onclick="changeTab(this, 'Asistencia')">
+                    <div class="icon-container">
+                        <div class="badge">✓</div>
+                        <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    </div>
+                    <span>Asistencia</span>
+                </div>
+                
+                <div class="tab-item" id="tab-dedicatoria" onclick="changeTab(this, 'Dedicatoria')">
+                    <div class="icon-container">
+                        <div class="badge">✓</div>
+                        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    </div>
+                    <span>Dedicatoria</span>
+                </div>
+                
+                <div class="tab-item" id="tab-regalo" onclick="changeTab(this, 'Regalo')">
+                    <div class="icon-container">
+                        <div class="badge">✓</div>
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    </div>
+                    <span>Regalo</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function changeTab(clickedElement, sectionName) {
+            document.querySelectorAll('.tab-item').forEach(tab => tab.classList.remove('active'));
+            clickedElement.classList.add('active');
+            document.getElementById('current-section').innerText = sectionName;
+        }
+
+        const pasosTour = [
+            { id: 'tab-inicio', nombre: 'Inicio', texto: 'Aquí verás el resumen y los detalles principales.' },
+            { id: 'tab-asistencia', nombre: 'Asistencia', texto: 'Primero, confirma tu asistencia.\n¡Danos tu "check"!' },
+            { id: 'tab-dedicatoria', nombre: 'Dedicatoria', texto: 'Déjale un mensaje bonito al bebé.' },
+            { id: 'tab-regalo', nombre: 'Regalo', texto: 'Si deseas hacernos un presente, mira aquí.' }
+        ];
+
+        let pasoActual = 0;
+
+        function iniciarTour() {
+            let pasosCompletados = parseInt(localStorage.getItem('pasosCompletados')) || 0;
+            if (pasosCompletados >= pasosTour.length) return; 
+
+            pasoActual = pasosCompletados; 
+            document.getElementById('tour-overlay').style.display = 'block';
+            document.getElementById('tour-tooltip').style.display = 'block';
+            mostrarPaso(pasoActual);
+        }
+
+        function mostrarPaso(index) {
+            document.querySelectorAll('.icon-container').forEach(icon => icon.classList.remove('highlighted-icon'));
+
+            const paso = pasosTour[index];
+            const elementoDestino = document.getElementById(paso.id);
+            const contenedorIcono = elementoDestino.querySelector('.icon-container');
+            
+            changeTab(elementoDestino, paso.nombre);
+            contenedorIcono.classList.add('highlighted-icon');
+            document.getElementById('tour-text').innerText = paso.texto;
+
+            const rect = elementoDestino.getBoundingClientRect();
+            const containerRect = document.getElementById('app-container').getBoundingClientRect();
+            
+            const posIzquierda = (rect.left - containerRect.left) + (rect.width / 2);
+            let finalLeft = posIzquierda;
+            
+            if (posIzquierda < 110) finalLeft = 110; 
+            if (posIzquierda > 290) finalLeft = 290; 
+
+            document.getElementById('tour-tooltip').style.left = finalLeft + 'px';
+            document.getElementById('btn-atras').style.visibility = index === 0 ? 'hidden' : 'visible';
+            
+            if (index === pasosTour.length - 1) {
+                document.getElementById('btn-siguiente').innerText = 'Finalizar';
+            } else {
+                document.getElementById('btn-siguiente').innerText = 'Siguiente';
+            }
+        }
+
+        function pasoSiguiente() {
+            if (pasoActual < pasosTour.length - 1) {
+                pasoActual++;
+                mostrarPaso(pasoActual);
+            } else {
+                cerrarTour();
+            }
+        }
+
+        function pasoAnterior() {
+            if (pasoActual > 0) {
+                pasoActual--;
+                mostrarPaso(pasoActual);
+            }
+        }
+
+        function cerrarTour() {
+            document.getElementById('tour-overlay').style.display = 'none';
+            document.getElementById('tour-tooltip').style.display = 'none';
+            document.querySelectorAll('.icon-container').forEach(icon => icon.classList.remove('highlighted-icon'));
+            localStorage.setItem('pasosCompletados', pasoActual + 1);
+        }
+
+        function reiniciarTour() {
+            localStorage.setItem('pasosCompletados', 0);
+            iniciarTour();
+        }
+
+        window.onload = function() {
+            setTimeout(iniciarTour, 600); 
+        };
+    </script>
+</body>
+</html>
