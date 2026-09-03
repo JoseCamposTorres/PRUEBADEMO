@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Cumpleaños - Invitación e Interacción Guiada</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #d1f0ff;
+            display: flex; justify-content: center;
+            height: 100vh;
+        }
+
+        #app-container {
+            width: 100%; max-width: 400px;
+            background-color: #d1f0ff; position: relative;
+            height: 100%; overflow: hidden;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        .top-back-bar {
+            position: absolute;
+            top: 0; left: 0; width: 100%;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex; align-items: center; justify-content: space-between;
+            box-sizing: border-box;
+            z-index: 25;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            background-color: #ffffff;
+            color: #1a365d;
+            border: 1px solid #cbd5e0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .help-trigger {
+            background: #3182ce; color: white; border: none;
+            padding: 6px 10px; border-radius: 8px; font-size: 12px;
+            font-weight: 600; cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+        .help-trigger:hover {
+            background: #2b6cb0; transform: scale(1.03);
+        }
+
+        #content-area {
+            padding: 15px; text-align: center;
+            color: #1a365d; height: calc(100% - 140px);
+            margin-top: 50px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            display: flex; flex-direction: column;
+            align-items: center;
+        }
+
+        /* ----- ESTILOS DE INICIO / CUMPLEAÑOS ----- */
+        .hero-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
+            border-radius: 18px;
+            padding: 18px 14px;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(49, 130, 206, 0.12);
+            border: 2px solid #bee3f8;
+            position: relative;
+            box-sizing: border-box;
+            margin-bottom: 14px;
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            width: 80px; height: 80px;
+            margin: 0 auto 10px auto;
+        }
+        .avatar-img {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #feebc8, #fbd38d);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 40px;
+            border: 3px solid #3182ce;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .crown-badge {
+            position: absolute;
+            top: -12px; right: -5px;
+            font-size: 24px;
+            animation: bounce 2s infinite alternate;
+        }
+        @keyframes bounce {
+            from { transform: translateY(0) rotate(0deg); }
+            to { transform: translateY(-5px) rotate(10deg); }
+        }
+
+        .party-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #2b6cb0;
+            margin: 5px 0;
+            line-height: 1.2;
+        }
+        .party-subtitle {
+            font-size: 13px;
+            color: #4a5568;
+            margin: 0 0 12px 0;
+        }
+
+        /* Countdown Clock */
+        .countdown-title {
+            font-size: 11px;
+            font-weight: bold;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .countdown-container {
+            display: flex; justify-content: center; gap: 8px;
+            margin: 6px 0 12px 0;
+        }
+        .time-box {
+            background: #3182ce;
+            color: #ffffff;
+            border-radius: 10px;
+            padding: 6px 8px;
+            min-width: 52px;
+            box-shadow: 0 2px 6px rgba(49, 130, 206, 0.3);
+        }
+        .time-box .num {
+            font-size: 18px; font-weight: bold; line-height: 1;
+        }
+        .time-box .label {
+            font-size: 9px; text-transform: uppercase; margin-top: 3px; opacity: 0.9;
+        }
+
+        /* Event Info Cards */
+        .info-grid {
+            width: 100%;
+            display: flex; flex-direction: column; gap: 10px;
+            margin-bottom: 14px;
+        }
+        .info-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex; align-items: center; gap: 12px;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+        }
+        .info-icon {
+            font-size: 24px;
+            background: #ebf8ff;
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .info-text strong {
+            display: block; font-size: 13px; color: #2d3748;
+        }
+        .info-text span {
+            font-size: 12px; color: #718096;
+        }
+        .map-link-btn {
+            margin-left: auto;
+            background: #ebf8ff;
+            color: #3182ce;
+            border: 1px solid #bee3f8;
+            border-radius: 6px;
+            padding: 5px 8px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        .action-bar {
+            display: flex; gap: 10px; width: 100%; margin-bottom: 12px;
+        }
+        .btn-confetti {
+            flex: 1;
+            background: linear-gradient(135deg, #ed8936, #dd6b20);
+            color: white; border: none; padding: 10px;
+            border-radius: 10px; font-weight: bold; font-size: 13px;
+            cursor: pointer; box-shadow: 0 3px 8px rgba(237, 137, 54, 0.3);
+            transition: transform 0.1s;
+        }
+        .btn-confetti:active { transform: scale(0.96); }
+
+        .btn-cta {
+            width: 100%;
+            background: #3182ce;
+            color: white; border: none; padding: 12px;
+            border-radius: 12px; font-weight: bold; font-size: 14px;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(49, 130, 206, 0.3);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+        .btn-cta:hover { background: #2b6cb0; }
+
+        /* ----- CARTA/SOBRE ANIMADO CON ASISTENTE A LA DERECHA ----- */
+        .modal-overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 40;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+            animation: fadeInOverlay 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .envelope-card {
+            background: #fffdf5;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 0);
+            background-size: 16px 16px;
+            border-radius: 20px;
+            padding: 20px 16px 16px 16px;
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35), 0 0 0 3px #f6e05e;
+            border: 2px dashed #cbd5e0;
+            animation: openEnvelope 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.25) forwards;
+            box-sizing: border-box;
+        }
+
+        @keyframes openEnvelope {
+            0% { transform: scale(0.6) rotate(-5deg) translateY(40px); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg) translateY(0); opacity: 1; }
+        }
+
+        .envelope-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px dashed #cbd5e0;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+
+        .envelope-tag {
+            background: #feebc8;
+            color: #744210;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .envelope-body {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+            margin-bottom: 12px;
+        }
+
+        .envelope-content-left {
+            flex: 1;
+        }
+
+        .envelope-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #2b6cb0;
+            margin: 0 0 6px 0;
+            line-height: 1.25;
+        }
+
+        .envelope-message {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.4;
+            margin: 0;
+        }
+
+        /* Personaje a la derecha saludando */
+        .character-right-side {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .character-avatar-holder {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #feebc8 0%, #fbd38d 100%);
+            border: 3px solid #ffffff;
+            box-shadow: 0 6px 16px rgba(49, 130, 206, 0.25), 0 0 0 3px #63b3ed;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 38px;
+            animation: waveCharacter 2.5s infinite ease-in-out alternate;
+        }
+
+        @keyframes waveCharacter {
+            0% { transform: translateY(0) rotate(-4deg); }
+            50% { transform: translateY(-6px) rotate(4deg); }
+            100% { transform: translateY(0) rotate(-4deg); }
+        }
+
+        .character-name-tag {
+            background: #3182ce;
+            color: white;
+            font-size: 9px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-top: 4px;
+            white-space: nowrap;
+        }
+
+        /* Barra de Temporizador de 5 Segundos */
+        .timer-container {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 10px;
+            padding: 6px 10px;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .timer-text {
+            font-size: 11px;
+            font-weight: bold;
+            color: #2b6cb0;
+            white-space: nowrap;
+        }
+
+        .timer-progress-bar {
+            flex-grow: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .timer-progress-fill {
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, #ed8936, #e53e3e);
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+
+        .btn-envelope-cta {
+            width: 100%;
+            background: linear-gradient(135deg, #3182ce 0%, #2b6cb0 100%);
+            color: #ffffff;
+            border: none;
+            padding: 13px;
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(49, 130, 206, 0.35);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: transform 0.15s;
+            animation: pulseCta 1.5s infinite alternate;
+        }
+
+        @keyframes pulseCta {
+            0% { transform: scale(1); box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3); }
+            100% { transform: scale(1.02); box-shadow: 0 6px 18px rgba(49, 130, 206, 0.45); }
+        }
+
+        /* Floating Balloons */
+        .balloon-float {
+            position: absolute; font-size: 26px; cursor: pointer;
+            user-select: none; z-index: 5; transition: transform 0.2s;
+            animation: floatUp 3s infinite ease-in-out alternate;
+        }
+        .balloon-left { top: 10px; left: 10px; }
+        .balloon-right { top: 10px; right: 10px; animation-delay: 1.5s; }
+        @keyframes floatUp {
+            from { transform: translateY(0px) rotate(-5deg); }
+            to { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        /* Dynamic Section Content Box */
+        .section-view {
+            width: 100%;
+            display: none; flex-direction: column; align-items: center;
+        }
+        .section-view.active-view {
+            display: flex;
+        }
+
+        /* Form Controls for other tabs */
+        .form-card {
+            background: white; border-radius: 14px; padding: 16px; width: 100%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05); text-align: left; box-sizing: border-box;
+            margin-top: 10px; border: 1px solid #e2e8f0;
+        }
+        .form-group { margin-bottom: 14px; }
+        .form-group label { display: block; font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #2d3748; }
+        .form-input {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e0;
+            box-sizing: border-box; font-size: 13px; outline: none;
+        }
+        .form-input:focus { border-color: #3182ce; box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.15); }
+        textarea.form-input { resize: none; height: 75px; }
+
+        /* ----- BARRA DE NAVEGACIÓN INFERIOR CON RESALTADO DINÁMICO ----- */
+        .bottom-navbar {
+            position: absolute; bottom: 0; width: 100%;
+            background-color: #ffffff;
+            border-top-left-radius: 20px; border-top-right-radius: 20px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+            display: flex; flex-direction: column;
+            z-index: 10;
+        }
+
+        .progress-section {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 20px; border-bottom: 1px solid #f0f0f0;
+            font-size: 11.5px; color: #4a5568; font-weight: 700;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1; height: 7px; background-color: #edf2f7;
+            border-radius: 6px; margin: 0 10px; overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%; width: 25%;
+            background: linear-gradient(90deg, #3182ce, #38a169);
+            border-radius: 6px; transition: width 0.4s ease;
+        }
+
+        .tabs-section { display: flex; justify-content: space-around; padding: 8px 0 10px 0; }
+
+        .tab-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: #718096; font-size: 11px; cursor: pointer;
+            background: none; border: none; position: relative;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            padding: 0 4px;
+        }
+
+        .icon-container {
+            position: relative;
+            display: flex; justify-content: center; align-items: center;
+            width: 42px; height: 42px; border-radius: 50%;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: #f7fafc;
+            border: 2px solid transparent;
+        }
+
+        .tab-item svg { width: 22px; height: 22px; fill: currentColor; transition: transform 0.2s; }
+        
+        /* RESALTADO DE SECCIÓN ACTIVA */
+        .tab-item.active {
+            color: #2b6cb0;
+            font-weight: 800;
+            transform: translateY(-4px);
+        }
+        .tab-item.active .icon-container {
+            background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+            border-color: #3182ce;
+            box-shadow: 0 6px 14px rgba(49, 130, 206, 0.35);
+            transform: scale(1.12);
+        }
+        .tab-item.active svg { fill: #2b6cb0; }
+
+        /* BADGES (PENDIENTE '!' VS COMPLETADO '✓') */
+        .badge {
+            position: absolute; top: -3px; right: -3px;
+            background: #ed8936; color: white; border-radius: 50%;
+            width: 16px; height: 16px; font-size: 9px; line-height: 16px;
+            text-align: center; border: 2px solid white; font-weight: 900;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+            animation: pulseBadge 2s infinite alternate;
+        }
+        @keyframes pulseBadge {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.18); }
+        }
+
+        /* COMPLETADO CON ÉXITO */
+        .tab-item.completed .icon-container {
+            border-color: #48bb78;
+        }
+        .tab-item.completed .badge {
+            background: #48bb78;
+            animation: none;
+            box-shadow: 0 2px 6px rgba(72, 187, 120, 0.4);
+        }
+
+        /* ----- DIÁLOGO DE GUÍA INTERACTIVA (TOOLTIP) ----- */
+        .tour-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 15; display: none;
+        }
+
+        .tour-tooltip {
+            position: absolute; background-color: #ffffff; color: #1a365d;
+            border: 2px solid #3182ce; padding: 15px; border-radius: 12px;
+            width: 230px; box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 20; font-size: 13px; font-weight: 500; display: none;
+            bottom: 110px; left: 50%; transform: translateX(-50%);
+            text-align: center;
+        }
+
+        .tour-buttons { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+        .tour-btn {
+            border: none; border-radius: 6px; padding: 5px 10px;
+            font-size: 11px; font-weight: 600; cursor: pointer;
+        }
+        .tour-btn-skip { background-color: #e2e8f0; color: #4a5568; }
+        .tour-btn-next { background-color: #3182ce; color: #ffffff; }
+
+        /* Efecto de resaltado guiado */
+        .highlighted-target {
+            z-index: 22 !important; background: #ffffff !important;
+            box-shadow: 0 0 0 4px #f6e05e, 0 0 0 8px rgba(246, 224, 94, 0.4);
+            animation: pulseGlow 1s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { box-shadow: 0 0 0 3px #f6e05e; }
+            to { box-shadow: 0 0 0 8px rgba(246, 224, 94, 0.5); }
+        }
+
+        /* Canvas para Confeti */
+        #confetti-canvas {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 30;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+        <!-- Canvas para partículas de confeti -->
+        <canvas id="confetti-canvas"></canvas>
+
+        <div class="top-back-bar">
+            <a href="index.html" class="back-btn">&larr; Menú</a>
+            <button class="help-trigger" onclick="reiniciarTour()">¿Cómo usar?</button>
+        </div>
+
+        <div id="tour-overlay" class="tour-overlay" onclick="cerrarTour()"></div>
+
+        <!-- CARTA DE INVITACIÓN EMERGENTE CON ASISTENTE A LA DERECHA -->
+        <div id="assistant-modal" class="modal-overlay">
+            <div class="envelope-card">
+                <div class="envelope-header">
+                    <div class="envelope-tag" id="modal-tag">💌 Invitación Especial</div>
+                    <span style="font-size: 16px;">✨</span>
+                </div>
+
+                <div class="envelope-body">
+                    <div class="envelope-content-left">
+                        <h3 class="envelope-title" id="modal-title">¡Te Esperamos! 🎉</h3>
+                        <p class="envelope-message" id="modal-message">
+                            Cada momento es inolvidable al compartirlo con quienes más queremos. 💖<br><br>
+                            <strong>A continuación confirmaremos tu asistencia:</strong>
+                        </p>
+                    </div>
+
+                    <!-- Personaje a la derecha sosteniendo la carta -->
+                    <div class="character-right-side">
+                        <div class="character-avatar-holder" id="modal-avatar">👦</div>
+                        <div class="character-name-tag">CUMPLEAÑERO</div>
+                    </div>
+                </div>
+
+                <!-- Temporizador Regresivo de 5 Segundos -->
+                <div class="timer-container">
+                    <span class="timer-text">⏳ Llevándote en <span id="auto-timer-num">5</span>s...</span>
+                    <div class="timer-progress-bar">
+                        <div id="timer-progress-fill" class="timer-progress-fill"></div>
+                    </div>
+                </div>
+
+                <button class="btn-envelope-cta" id="modal-btn-cta" onclick="confirmarDesdeModal()">
+                    ¡Ir a Confirmar Ahora! 💌
+                </button>
+            </div>
+        </div>
+
+        <!-- ÁREA DE CONTENIDO DINÁMICO POR PESTAÑAS -->
+        <div id="content-area">
+            
+            <!-- VISTA 0: INICIO / CUMPLEAÑOS -->
+            <div id="view-0" class="section-view active-view">
+                <div class="hero-card">
+                    <span class="balloon-float balloon-left" onclick="explotarGlobo(this)">🎈</span>
+                    <span class="balloon-float balloon-right" onclick="explotarGlobo(this)">🎈</span>
+                    
+                    <div class="avatar-wrapper">
+                        <div class="crown-badge">👑</div>
+                        <div class="avatar-img">🎂</div>
+                    </div>
+                    <h1 class="party-title">¡Mi Cumpleaños!</h1>
+                    <p class="party-subtitle">¡Ven a celebrar conmigo un día lleno de risas, juegos y momentos inolvidables!</p>
+
+                    <div class="countdown-title">Tiempo para la gran fiesta</div>
+                    <div class="countdown-container">
+                        <div class="time-box"><div class="num" id="cd-days">12</div><div class="label">Días</div></div>
+                        <div class="time-box"><div class="num" id="cd-hours">08</div><div class="label">Horas</div></div>
+                        <div class="time-box"><div class="num" id="cd-mins">45</div><div class="label">Min</div></div>
+                        <div class="time-box"><div class="num" id="cd-secs">30</div><div class="label">Seg</div></div>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-confetti" onclick="lanzarConfetti()">🎊 ¡Lanzar Confeti!</button>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">📅</div>
+                        <div class="info-text">
+                            <strong>Fecha y Hora</strong>
+                            <span>Sábado, 25 de Noviembre • 4:00 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">📍</div>
+                        <div class="info-text">
+                            <strong>Lugar de la Fiesta</strong>
+                            <span>Salón Mágico • Av. Principal 123</span>
+                        </div>
+                        <button class="map-link-btn" onclick="alert('Abriendo mapa de la ubicación...')">Ver Mapa</button>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-icon">🎨</div>
+                        <div class="info-text">
+                            <strong>Temática</strong>
+                            <span>Fiesta de Colores & Alegría</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-cta" onclick="abrirModalAsistente()">
+                    Confirmar mi Asistencia &rarr;
+                </button>
+            </div>
+
+            <!-- VISTA 1: ASISTENCIA (FORMULARIO DETALLADO Y ACCESIBLE) -->
+            <div id="view-1" class="section-view">
+                <!-- Tarjeta del asistente en la cabecera del formulario -->
+                <div class="form-card" style="margin-top: 0; margin-bottom: 12px; background: linear-gradient(135deg, #ebf8ff 0%, #ffffff 100%); border: 1.5px solid #90cdf4;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 34px; background: white; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: 2px solid #3182ce; flex-shrink: 0;">🥳</div>
+                        <div style="font-size: 12px; color: #1a365d; line-height: 1.4;">
+                            <strong style="color: #2b6cb0; font-size: 13px; display: block; margin-bottom: 2px;">¡Confirmación de Asistencia! 🎈</strong>
+                            Por favor, completa estos sencillos datos para guardar tu lugar en la fiesta.
+                        </div>
+                    </div>
+                </div>
+
+                <form id="rsvp-form" onsubmit="event.preventDefault(); enviarAsistencia();" class="form-card">
+                    <!-- 1. ¿Podrás asistir?* -->
+                    <div class="form-group">
+                        <label style="font-size: 13px;">1. ¿Podrás asistir? <span style="color: #e53e3e;">*</span></label>
+                        <div style="display: flex; gap: 10px; margin-top: 6px;">
+                            <label style="flex: 1; background: #ebf8ff; border: 2px solid #3182ce; padding: 10px; border-radius: 10px; cursor: pointer; text-align: center; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; color: #2b6cb0;" id="opt-si-label">
+                                <input type="radio" name="asistencia" value="Si, ahí estaré" checked onchange="toggleAsistenciaOption('si')" style="accent-color: #3182ce;">
+                                Sí, ahí estaré 🎉
+                            </label>
+                            <label style="flex: 1; background: #f7fafc; border: 2px solid #cbd5e0; padding: 10px; border-radius: 10px; cursor: pointer; text-align: center; font-size: 12px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 6px; color: #4a5568;" id="opt-no-label">
+                                <input type="radio" name="asistencia" value="No puedo, lo siento" onchange="toggleAsistenciaOption('no')" style="accent-color: #e53e3e;">
+                                No puedo 😢
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- 2. Celular* -->
+                    <div class="form-group">
+                        <label style="font-size: 13px;">2. Celular <span style="color: #e53e3e;">*</span></label>
+                        <input type="tel" class="form-input" id="field-celular" placeholder="Ej. 987 654 321" required>
+                    </div>
+
+                    <!-- 3. Cantidad de adultos* -->
+                    <div class="form-group" id="group-adultos">
+                        <label style="font-size: 13px;">3. Cantidad de adultos <span style="color: #e53e3e;">*</span></label>
+                        <input type="number" class="form-input" id="field-cant-adultos" value="1" min="1" max="10" required>
+                    </div>
+
+                    <!-- 4. Nombres y apellidos de adultos* -->
+                    <div class="form-group" id="group-nombres">
+                        <label style="font-size: 13px;">4. Nombres y apellidos de adultos <span style="color: #e53e3e;">*</span></label>
+                        <textarea class="form-input" id="field-nombres-adultos" placeholder="Ej. Juan Pérez, María Gómez..." required></textarea>
+                    </div>
+
+                    <!-- 5. Comentarios o preguntas -->
+                    <div class="form-group">
+                        <label style="font-size: 13px;">5. Comentarios o preguntas (opcional)</label>
+                        <textarea class="form-input" id="field-comentarios" placeholder="¿Alguna duda o nota adicional?"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-cta" style="margin-bottom: 0;">
+                        Enviar mi Confirmación 🚀
+                    </button>
+                </form>
+            </div>
+
+            <!-- VISTA 2: DEDICATORIA -->
+            <div id="view-2" class="section-view">
+                <div class="form-card" style="margin-top: 0; margin-bottom: 12px; background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%); border: 1.5px solid #feb2b2;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 34px; background: white; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: 2px solid #e53e3e; flex-shrink: 0;">💌</div>
+                        <div style="font-size: 12px; color: #1a365d; line-height: 1.4;">
+                            <strong style="color: #c53030; font-size: 13px; display: block; margin-bottom: 2px;">¡Dejar una Dedicatoria! ✨</strong>
+                            Escribe un hermoso mensaje de feliz cumpleaños para guardarlo de recuerdo.
+                        </div>
+                    </div>
+                </div>
+
+                <form id="dedication-form" onsubmit="event.preventDefault(); enviarDedicatoria();" class="form-card">
+                    <div class="form-group">
+                        <label style="font-size: 13px;">Tu Nombre o Apodo: <span style="color: #e53e3e;">*</span></label>
+                        <input type="text" class="form-input" id="field-dedicatoria-nombre" placeholder="Ej. Tía María" required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 13px;">Tu Mensaje de Felicitación: <span style="color: #e53e3e;">*</span></label>
+                        <textarea class="form-input" id="field-dedicatoria-mensaje" placeholder="¡Te deseo un cumpleaños maravilloso lleno de salud y alegrías!..." required style="height: 90px;"></textarea>
+                    </div>
+                    <button type="submit" class="btn-cta" style="margin-bottom: 0; background: linear-gradient(135deg, #e53e3e, #c53030);">
+                        Publicar mi Dedicatoria 💌
+                    </button>
+                </form>
+            </div>
+
+            <!-- VISTA 3: REGALO -->
+            <div id="view-3" class="section-view">
+                <div class="form-card" style="margin-top: 0; margin-bottom: 12px; background: linear-gradient(135deg, #feebc8 0%, #ffffff 100%); border: 1.5px solid #fbd38d;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="font-size: 34px; background: white; border-radius: 50%; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: 2px solid #dd6b20; flex-shrink: 0;">🎁</div>
+                        <div style="font-size: 12px; color: #1a365d; line-height: 1.4;">
+                            <strong style="color: #c05621; font-size: 13px; display: block; margin-bottom: 2px;">Sugerencias de Regalo 🌟</strong>
+                            Tu presencia es nuestro mejor regalo. Si deseas tener un detalle adicional:
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-card">
+                    <div style="margin-bottom: 14px; font-size: 13px; line-height: 1.5; color: #2d3748;">
+                        ✉️ <strong>Lluvia de Sobres:</strong> Habrá un buzón especial de sobres en la recepción de la fiesta.<br><br>
+                        💳 <strong>Regalo Digital:</strong> Si prefieres transferencia (Yape/Plin/Banco), puedes solicitar los datos.
+                    </div>
+                    <button class="btn-cta" style="margin-bottom: 0; background: linear-gradient(135deg, #dd6b20, #c05621);" onclick="enviarRegalo()">
+                        Confirmar Lectura de Regalos 🎁
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tooltip de guía para el usuario -->
+        <div id="tour-tooltip" class="tour-tooltip">
+            <p id="tour-text" style="margin: 0 0 8px 0;">Aquí puedes ver los detalles generales.</p>
+            <div class="tour-buttons">
+                <button class="tour-btn tour-btn-skip" onclick="cerrarTour()">Omitir</button>
+                <button class="tour-btn tour-btn-next" id="tour-next-btn" onclick="siguientePaso()">Siguiente</button>
+            </div>
+        </div>
+
+        <!-- Navegación inferior con indicadores de interacción -->
+        <nav class="bottom-navbar">
+            <div class="progress-section">
+                <span>Progreso</span>
+                <div class="progress-bar-container">
+                    <div id="progreso-barra" class="progress-bar-fill" style="width: 25%;"></div>
+                </div>
+                <span id="progreso-texto">0/4</span>
+            </div>
+
+            <div class="tabs-section">
+                <button class="tab-item active" id="tab-0" onclick="seleccionarSeccion(0)">
+                    <div class="icon-container">
+                        <div class="badge" id="badge-0">!</div>
+                        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+                    </div>
+                    <span>Inicio</span>
+                </button>
+                
+                <button class="tab-item" id="tab-1" onclick="seleccionarSeccion(1)">
+                    <div class="icon-container">
+                        <div class="badge" id="badge-1">!</div>
+                        <svg viewBox="0 0 24 24"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+                    </div>
+                    <span>Asistencia</span>
+                </button>
+                
+                <button class="tab-item" id="tab-2" onclick="seleccionarSeccion(2)">
+                    <div class="icon-container">
+                        <div class="badge" id="badge-2">!</div>
+                        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+                    </div>
+                    <span>Dedicatoria</span>
+                </button>
+                
+                <button class="tab-item" id="tab-3" onclick="seleccionarSeccion(3)">
+                    <div class="icon-container">
+                        <div class="badge" id="badge-3">!</div>
+                        <svg viewBox="0 0 24 24"><path d="M20 6h-2.18c.11-.31.18-.65.18-1 0-1.66-1.34-3-3-3-1.05 0-1.96.54-2.5 1.35l-.5.67-.5-.68C10.96 2.54 10.05 2 9 2 7.34 2 6 3.34 6 5c0 .35.07.69.18 1H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-5-2c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zM9 4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm11 15H4v-2h16v2zm0-5H4V8h5.08L7 10.83 8.62 12 11 8.76l1-1.36 1 1.36L15.38 12 17 10.83 14.92 8H20v6z"/></svg>
+                    </div>
+                    <span>Regalo</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        const secciones = [
+            { titulo: "Inicio", desc: "Desliza todo el contenido hacia abajo para completar el primer paso." },
+            { titulo: "Confirmar Asistencia", desc: "¡Es muy importante! Por favor indícanos si nos acompañarás." },
+            { titulo: "Dejar Dedicatoria", desc: "Escribe un mensaje de feliz cumpleaños que guardaremos con cariño." },
+            { titulo: "Opciones de Regalo", desc: "Si deseas tener un detalle con nosotros, aquí encontrarás sugerencias." }
+        ];
+
+        let pasoActual = 0;
+        let seccionesVisitadas = [false, false, false, false];
+
+        function seleccionarSeccion(index) {
+            pasoActual = index;
+            // No marcar seccionesVisitadas aquí para requerir la confirmación activa del usuario
+            
+            // Cambiar las vistas visibles
+            document.querySelectorAll('.section-view').forEach((view, i) => {
+                view.classList.toggle('active-view', i === index);
+            });
+
+            // Reiniciar el scroll del area al cambiar de pestaña
+            document.getElementById('content-area').scrollTop = 0;
+
+            // Cambiar estados de botones de la barra inferior
+            actualizarEstadoPestañas();
+            actualizarProgreso();
+            cerrarTour();
+        }
+
+        function actualizarEstadoPestañas() {
+            document.querySelectorAll('.tab-item').forEach((item, i) => {
+                item.classList.toggle('active', i === pasoActual);
+                const badge = item.querySelector('.badge');
+                if(seccionesVisitadas[i]) {
+                    item.classList.add('completed');
+                    if (badge) badge.innerText = '✓';
+                } else {
+                    item.classList.remove('completed');
+                    if (badge) badge.innerText = '!';
+                }
+            });
+        }
+
+        function actualizarProgreso() {
+            const completados = seccionesVisitadas.filter(Boolean).length;
+            const porcentaje = (completados / 4) * 100;
+            document.getElementById('progreso-barra').style.width = porcentaje + '%';
+            document.getElementById('progreso-texto').innerText = completados + '/4';
+        }
+
+        // CONTROL DE SCROLL PARA COMPLETAR EL PASO 1 (INICIO)
+        const contentArea = document.getElementById('content-area');
+        contentArea.addEventListener('scroll', checkInicioScroll);
+
+        function checkInicioScroll() {
+            if (pasoActual === 0 && !seccionesVisitadas[0]) {
+                const scrollPosition = contentArea.scrollTop + contentArea.clientHeight;
+                const scrollHeight = contentArea.scrollHeight;
+                
+                // Si el usuario llega cerca del final del scroll (margen de 20px)
+                if (scrollPosition >= scrollHeight - 20) {
+                    seccionesVisitadas[0] = true;
+                    actualizarEstadoPestañas();
+                    actualizarProgreso();
+                    lanzarConfetti(); // Celebración de paso 1 completado
+                    
+                    // Abrir la cartita emergente con temporizador de 5s
+                    setTimeout(abrirModalAsistente, 350);
+                }
+            }
+        }
+
+        /* ----- LÓGICA DE LA CARTA EMERGENTE DEL ASISTENTE CON CONTEO DE 5 SEGUNDOS ----- */
+        let autoTimerInterval = null;
+        let modalActionCallback = null;
+
+        function abrirModalAsistente() {
+            abrirModalTransicion({
+                tag: "💌 Invitación Especial",
+                titulo: "¡Te Esperamos! 🎉",
+                mensaje: "Cada momento es inolvidable al compartirlo con quienes más queremos. 💖<br><br><strong>A continuación confirmaremos tu asistencia:</strong>",
+                iconoPersonaje: "👦",
+                botonTexto: "¡Ir a Confirmar Ahora! 💌",
+                callback: function() {
+                    seleccionarSeccion(1);
+                }
+            });
+        }
+
+        function abrirModalTransicion(config) {
+            document.getElementById('modal-tag').innerText = config.tag || "💌 Asistente de Fiesta";
+            document.getElementById('modal-title').innerText = config.titulo || "¡Hola!";
+            document.getElementById('modal-message').innerHTML = config.mensaje || "";
+            document.getElementById('modal-avatar').innerText = config.iconoPersonaje || "👦";
+            document.getElementById('modal-btn-cta').innerText = config.botonTexto || "Continuar ➡️";
+
+            modalActionCallback = config.callback || null;
+
+            document.getElementById('assistant-modal').style.display = 'flex';
+            iniciarContadorRedireccion();
+        }
+
+        function iniciarContadorRedireccion() {
+            document.getElementById('auto-timer-num').innerText = '5';
+            document.getElementById('timer-progress-fill').style.width = '100%';
+
+            if (autoTimerInterval) clearInterval(autoTimerInterval);
+
+            const startTime = Date.now();
+            const totalMs = 5000;
+
+            autoTimerInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const remainingMs = Math.max(0, totalMs - elapsed);
+                const pct = (remainingMs / totalMs) * 100;
+                
+                const secs = Math.ceil(remainingMs / 1000);
+                document.getElementById('auto-timer-num').innerText = secs;
+                document.getElementById('timer-progress-fill').style.width = pct + '%';
+
+                if (remainingMs <= 0) {
+                    clearInterval(autoTimerInterval);
+                    confirmarDesdeModal();
+                }
+            }, 100);
+        }
+
+        function cerrarModalAsistente() {
+            if (autoTimerInterval) clearInterval(autoTimerInterval);
+            document.getElementById('assistant-modal').style.display = 'none';
+        }
+
+        function confirmarDesdeModal() {
+            cerrarModalAsistente();
+            lanzarConfetti();
+            if (modalActionCallback) {
+                modalActionCallback();
+            } else {
+                seleccionarSeccion(1);
+            }
+        }
+
+        /* ----- LÓGICA DEL FORMULARIO DE ASISTENCIA (PASO 1 -> PASO 2) ----- */
+        function toggleAsistenciaOption(tipo) {
+            const labelSi = document.getElementById('opt-si-label');
+            const labelNo = document.getElementById('opt-no-label');
+            const groupAdultos = document.getElementById('group-adultos');
+            const groupNombres = document.getElementById('group-nombres');
+            const inputNombres = document.getElementById('field-nombres-adultos');
+
+            if (tipo === 'si') {
+                labelSi.style.background = '#ebf8ff';
+                labelSi.style.borderColor = '#3182ce';
+                labelSi.style.color = '#2b6cb0';
+                labelNo.style.background = '#f7fafc';
+                labelNo.style.borderColor = '#cbd5e0';
+                labelNo.style.color = '#4a5568';
+                
+                groupAdultos.style.display = 'block';
+                groupNombres.style.display = 'block';
+                inputNombres.required = true;
+            } else {
+                labelNo.style.background = '#fff5f5';
+                labelNo.style.borderColor = '#e53e3e';
+                labelNo.style.color = '#c53030';
+                labelSi.style.background = '#f7fafc';
+                labelSi.style.borderColor = '#cbd5e0';
+                labelSi.style.color = '#4a5568';
+                
+                groupAdultos.style.display = 'none';
+                groupNombres.style.display = 'none';
+                inputNombres.required = false;
+            }
+        }
+
+        function enviarAsistencia() {
+            seccionesVisitadas[1] = true;
+            actualizarEstadoPestañas();
+            actualizarProgreso();
+            lanzarConfetti();
+            
+            // Abrir el modal emergente del asistente para la transición a Dedicatoria
+            abrirModalTransicion({
+                tag: "🎉 ¡Asistencia Guardada!",
+                titulo: "¡Muchas Gracias por Responder!",
+                mensaje: "¡Qué alegría contar contigo! 💖<br><br><strong>El siguiente paso es dejarle un hermoso mensaje o deseo de feliz cumpleaños al cumpleañero:</strong>",
+                iconoPersonaje: "🥳",
+                botonTexto: "¡Ir a Dejar mi Dedicatoria! 💌",
+                callback: function() {
+                    seleccionarSeccion(2);
+                }
+            });
+        }
+
+        /* ----- LÓGICA DE DEDICATORIA (PASO 2 -> PASO 3) ----- */
+        function enviarDedicatoria() {
+            seccionesVisitadas[2] = true;
+            actualizarEstadoPestañas();
+            actualizarProgreso();
+            lanzarConfetti();
+
+            // Abrir el modal emergente del asistente para la transición a Regalo
+            abrirModalTransicion({
+                tag: "💌 ¡Dedicatoria Guardada!",
+                titulo: "¡Qué Hermoso Mensaje! ✨",
+                mensaje: "Tus palabras me llenan de emoción y felicidad. 💖<br><br><strong>Finalmente, echemos un vistazo a las sugerencias de regalo:</strong>",
+                iconoPersonaje: "🥰",
+                botonTexto: "Ver Sugerencias de Regalo 🎁",
+                callback: function() {
+                    seleccionarSeccion(3);
+                }
+            });
+        }
+
+        /* ----- LÓGICA DE REGALOS (PASO 3 -> FINAL 100%) ----- */
+        function enviarRegalo() {
+            seccionesVisitadas[3] = true;
+            actualizarEstadoPestañas();
+            actualizarProgreso();
+            lanzarConfetti();
+
+            // Abrir el modal emergente del asistente para la felicitación final
+            abrirModalTransicion({
+                tag: "🌟 ¡100% Completado!",
+                titulo: "¡Felicitaciones! 🎉",
+                mensaje: "Has completado todo el recorrido de la invitación. 🥳✨<br><br><strong>¡Muchas gracias por tu cariño, nos vemos muy pronto en la fiesta!</strong>",
+                iconoPersonaje: "🎂",
+                botonTexto: "¡Genial! Entendido 👍",
+                callback: function() {
+                    // Mantenerse en la vista
+                }
+            });
+        }
+
+        function mostrarGuiaPaso(index) {
+            pasoActual = index;
+            document.getElementById('tour-overlay').style.display = 'block';
+            document.getElementById('tour-tooltip').style.display = 'block';
+            
+            document.getElementById('tour-text').innerText = "Paso " + (index + 1) + ": " + secciones[index].desc;
+
+            // Resaltar icono correspondiente
+            document.querySelectorAll('.icon-container').forEach(el => el.classList.remove('highlighted-target'));
+            const objetivo = document.querySelector(`#tab-${index} .icon-container`);
+            if(objetivo) objetivo.classList.add('highlighted-target');
+        }
+
+        function siguientePaso() {
+            pasoActual++;
+            if(pasoActual < 4) {
+                mostrarGuiaPaso(pasoActual);
+            } else {
+                cerrarTour();
+            }
+        }
+
+        function cerrarTour() {
+            document.getElementById('tour-overlay').style.display = 'none';
+            document.getElementById('tour-tooltip').style.display = 'none';
+            document.querySelectorAll('.icon-container').forEach(el => el.classList.remove('highlighted-target'));
+        }
+
+        function reiniciarTour() {
+            mostrarGuiaPaso(0);
+        }
+
+        /* ----- EFECTOS DE INTERACCIÓN CUMPLEAÑOS ----- */
+        function explotarGlobo(el) {
+            el.style.transform = 'scale(1.5)';
+            el.style.opacity = '0';
+            setTimeout(() => {
+                el.innerText = '💥';
+                el.style.opacity = '1';
+                el.style.transform = 'scale(1)';
+                setTimeout(() => {
+                    el.innerText = '🎈';
+                }, 1500);
+            }, 200);
+        }
+
+        // Reloj Cuenta Regresiva
+        let targetDate = new Date();
+        targetDate.setDate(targetDate.getDate() + 12);
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff > 0) {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const mins = Math.floor((diff / 1000 / 60) % 60);
+                const secs = Math.floor((diff / 1000) % 60);
+
+                document.getElementById('cd-days').innerText = String(days).padStart(2, '0');
+                document.getElementById('cd-hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('cd-mins').innerText = String(mins).padStart(2, '0');
+                document.getElementById('cd-secs').innerText = String(secs).padStart(2, '0');
+            }
+        }
+        setInterval(updateCountdown, 1000);
+
+        // Confeti Canvas
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function lanzarConfetti() {
+            particles = [];
+            const colors = ['#f6e05e', '#63b3ed', '#f6ad55', '#fc8181', '#68d391', '#b794f4'];
+            for (let i = 0; i < 60; i++) {
+                particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2 + 50,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: Math.random() * -12 - 4,
+                    size: Math.random() * 6 + 4,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    gravity: 0.25,
+                    rotation: Math.random() * 360,
+                    rotSpeed: (Math.random() - 0.5) * 10
+                });
+            }
+            animateConfetti();
+        }
+
+        let animatingConfetti = false;
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            let active = false;
+
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += p.gravity;
+                p.rotation += p.rotSpeed;
+
+                if (p.y < canvas.height) {
+                    active = true;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate((p.rotation * Math.PI) / 180);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+                }
+            });
+
+            if (active) {
+                requestAnimationFrame(animateConfetti);
+            } else {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        window.onload = function() {
+            resizeCanvas();
+            actualizarEstadoPestañas();
+            actualizarProgreso();
+            checkInicioScroll();
+            setTimeout(() => {
+                mostrarGuiaPaso(0); // Orientación al inicio
+            }, 800);
+        };
+    </script>
+</body>
+</html>
