@@ -151,6 +151,82 @@
             gap: 8px;
         }
 
+        /* Progreso interno de Inicio */
+        .home-scroll-progress {
+            margin: 8px 0 22px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+        }
+
+        .home-scroll-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 7px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .home-scroll-track {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .home-scroll-fill {
+            height: 100%;
+            width: 0%;
+            background: #0b235e;
+            border-radius: 6px;
+            transition: width 0.15s ease;
+        }
+
+        .home-info-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            background: #ffffff;
+        }
+
+        .home-info-card h3 {
+            color: #0b235e;
+            font-size: 1.05rem;
+            margin-bottom: 9px;
+        }
+
+        .home-info-card p,
+        .home-info-card li {
+            color: #475569;
+            font-size: 0.86rem;
+            line-height: 1.6;
+        }
+
+        .home-info-card ul {
+            padding-left: 20px;
+        }
+
+        .home-complete-message {
+            display: none;
+            margin: 4px 0 18px;
+            padding: 13px 15px;
+            border-radius: 14px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .home-complete-message.show {
+            display: block;
+        }
+
         /* =========================================================
         2. VISTAS LIMPIAS EN FONDO BLANCO (Asistencia y Dedicatoria)
         ========================================================= */
@@ -334,6 +410,7 @@
             display: flex;
             justify-content: space-around;
             align-items: center;
+            gap: 2px;
         }
 
         .tab-btn {
@@ -403,21 +480,22 @@
 
         .tour-tooltip {
             position: fixed;
-            background-color: #ffffff;
+            background-color: #e2e8f0;
             color: #0b235e;
-            border: 2px solid #0b235e;
-            padding: 15px;
-            border-radius: 12px;
-            width: 220px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            border: 2px solid rgba(11, 35, 94, 0.2);
+            padding: 32px 18px 18px 18px;
+            border-radius: 16px;
+            width: 240px;
+            box-shadow: 0 12px 32px rgba(11, 35, 94, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
             z-index: 1100;
             font-size: 13px;
             font-weight: 500;
+            line-height: 1.5;
             display: none;
             bottom: 120px;
             left: 50%;
             transform: translateX(-50%);
-            transition: left 0.3s ease;
+            transition: left 0.3s ease, opacity 0.3s ease;
         }
 
         .tour-text {
@@ -446,15 +524,44 @@
             opacity: 0.8;
         }
 
-        .tour-btn-atras {
-            background-color: #e2e8f0;
-            color: #4a5568;
-            padding: 6px 10px;
+        .tour-close-btn {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            width: 26px;
+            height: 26px;
+            border: none;
+            background: rgba(11, 35, 94, 0.08);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            line-height: 0;
+            transition: all 0.2s ease;
         }
 
-        .tour-btn-saltar {
-            background-color: #e2e8f0;
+        .tour-close-btn svg {
+            width: 12px;
+            height: 12px;
+            stroke: #64748b;
+            stroke-width: 2.5;
+            transition: stroke 0.2s ease;
+        }
+
+        .tour-close-btn:hover {
+            background: rgba(11, 35, 94, 0.18);
+        }
+
+        .tour-close-btn:hover svg {
+            stroke: #0b235e;
+        }
+
+        .tour-btn-atras {
+            background-color: rgba(11, 35, 94, 0.1);
             color: #4a5568;
+            padding: 6px 10px;
         }
 
         .tour-btn-siguiente {
@@ -516,8 +623,9 @@
 
         <!-- Botón Volver al Menú Principal -->
         <a href="index.html" class="back-to-index-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             <span>Volver al menú</span>
         </a>
@@ -560,6 +668,16 @@
                     presencia hará este cumpleaños aún más especial! 🎯🥃
                 </p>
 
+                <div class="home-scroll-progress">
+                    <div class="home-scroll-progress-header">
+                        <span>📖 Revisa toda la invitación</span>
+                        <span id="home-scroll-percent">0%</span>
+                    </div>
+                    <div class="home-scroll-track">
+                        <div class="home-scroll-fill" id="home-scroll-fill"></div>
+                    </div>
+                </div>
+
                 <div class="card-box">
                     <h3 class="card-title">Celebración</h3>
                     <p style="margin-bottom: 8px; font-size: 0.88rem; color: #334155;">
@@ -573,6 +691,37 @@
                     </button>
                 </div>
 
+                <div class="home-info-card">
+                    <h3>📍 Lugar del encuentro</h3>
+                    <p>Prepárate para una noche especial. Aquí puedes colocar la dirección, referencia o enlace de
+                        ubicación del evento.</p>
+                </div>
+
+                <div class="home-info-card">
+                    <h3>🎉 ¿Qué te espera?</h3>
+                    <ul>
+                        <li>Buena música y ambiente para compartir.</li>
+                        <li>Momentos divertidos con amigos y familia.</li>
+                        <li>Fotos, recuerdos y muchas sorpresas.</li>
+                        <li>Una noche para celebrar juntos. 🥳</li>
+                    </ul>
+                </div>
+
+                <div class="home-info-card">
+                    <h3>👕 Código de vestimenta</h3>
+                    <p>Ven cómodo, con tu mejor actitud y listo para disfrutar. 😎</p>
+                </div>
+
+                <div class="home-info-card">
+                    <h3>💬 Antes de continuar</h3>
+                    <p>Desliza hasta el final de esta página. Cuando termines de revisar la invitación, se habilitará el
+                        siguiente paso automáticamente.</p>
+                </div>
+
+                <div id="home-complete-message" class="home-complete-message">
+                    ✅ ¡Inicio completado! Ahora puedes continuar con Asistencia.
+                </div>
+
                 <div style="margin-top: 15px;">
                     <button class="btn-action"
                         style="background-color: #f1f5f9; color: #0b235e; border: 1.5px dashed #0b235e;"
@@ -580,8 +729,6 @@
                         🔄 Reiniciar Animación desde 0
                     </button>
                 </div>
-
-
             </div>
         </div>
 
@@ -624,6 +771,32 @@
             <div id="wall" style="margin-top: 25px;"></div>
         </div>
 
+        <!-- PESTAÑA 4: REGALOS -->
+        <div id="tab-4" class="section clean-view">
+            <h2 class="clean-title">Regalos</h2>
+
+            <p style="font-size: 0.9rem; color: #475569; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+                Si deseas hacerme un regalo, aquí tienes algunas ideas. ¡Pero tu presencia ya es el mejor regalo! 🎁
+            </p>
+
+            <div class="card-box" style="margin-bottom: 14px;">
+                <p style="font-size: 0.88rem; color: #334155;">🎧 Audífonos inalámbricos</p>
+            </div>
+            <div class="card-box" style="margin-bottom: 14px;">
+                <p style="font-size: 0.88rem; color: #334155;">📚 Libro sorpresa</p>
+            </div>
+            <div class="card-box" style="margin-bottom: 14px;">
+                <p style="font-size: 0.88rem; color: #334155;">💰 Sobre sorpresa</p>
+            </div>
+            <div class="card-box" style="margin-bottom: 14px;">
+                <p style="font-size: 0.88rem; color: #334155;">🎮 Accesorio gamer</p>
+            </div>
+
+            <button class="btn-action" style="margin-top: 10px;" onclick="confirmarRegalo()">
+                ¡Listo, ya elegí!
+            </button>
+        </div>
+
         <!-- Pie de Página Promocional Rumba77 -->
         <div class="rumba-footer-card">
             <div class="rumba-logo">
@@ -634,18 +807,22 @@
 
         <!-- TOOLTIP DEL TOUR TIPO JUEGO -->
         <div id="tour-tooltip" class="tour-tooltip">
+            <button class="tour-close-btn" onclick="cerrarTour()"><svg viewBox="0 0 24 24" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                </svg></button>
             <p id="tour-text" class="tour-text">Primero, revisa los detalles de la invitación aquí.</p>
             <div class="tour-buttons">
                 <button id="btn-atras" class="tour-btn tour-btn-atras" onclick="pasoAnterior()">&lt;</button>
-                <button id="btn-saltar" class="tour-btn tour-btn-saltar" onclick="cerrarTour()">Saltar</button>
                 <button id="btn-siguiente" class="tour-btn tour-btn-siguiente"
                     onclick="pasoSiguiente()">Siguiente</button>
             </div>
 
             <!-- Flecha Fina Uniforme -->
             <svg class="tour-arrow" id="tour-arrow" viewBox="0 0 50 60" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 35 0 C 45 25, 30 45, 15 50 M 15 50 L 19 41 M 15 50 L 25 55" stroke="#0b235e"
-                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M 40 0 C 45 25, 30 45, 15 50 M 15 50 L 19 41 M 15 50 L 25 55" stroke="#0b235e" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </div>
 
@@ -653,7 +830,7 @@
         <div class="sticky-nav-container">
             <div class="progress-header">
                 <span class="progress-label">Mi progreso</span>
-                <span class="progress-value"><span id="current-step">0</span>/3</span>
+                <span class="progress-value"><span id="current-step">0</span>/4</span>
                 <div class="help-btn" onclick="reiniciarTour()">?</div>
             </div>
 
@@ -664,27 +841,55 @@
             <div class="nav-tabs">
                 <button class="tab-btn active" id="btn-tab-1" onclick="switchSection(1)">
                     <div class="icon-wrapper" id="tour-step-1">
-                        🏠
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z" />
+                            <polyline points="9 21 9 14 15 14 15 21" />
+                        </svg>
                         <div class="badge-check">✓</div>
                     </div>
                     Inicio
                 </button>
 
-                <button class="tab-btn" id="btn-tab-2" onclick="switchSection(2)">
+                <button class="tab-btn" id="btn-tab-2" onclick="ocultarGuiaParaCompletar(); switchSection(2)">
                     <div class="icon-wrapper" id="tour-step-2">
-                        ☑️
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 4H18a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                            <rect x="8" y="2" width="8" height="4" rx="1" />
+                            <path d="M9 14l2 2 4-4" />
+                        </svg>
                         <div class="badge-check">✓</div>
                     </div>
                     Asistencia
                 </button>
 
-                <button class="tab-btn" id="btn-tab-3" onclick="switchSection(3)">
+                <button class="tab-btn" id="btn-tab-3" onclick="ocultarGuiaParaCompletar(); switchSection(3)">
                     <div class="icon-wrapper" id="tour-step-3">
-                        💬
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
                         <div class="badge-check">✓</div>
                     </div>
                     Dedicatoria
                 </button>
+
+                <button class="tab-btn" id="btn-tab-4" onclick="ocultarGuiaParaCompletar(); switchSection(4)">
+                    <div class="icon-wrapper" id="tour-step-4">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 12v10H4V12" />
+                            <path d="M2 7h20v5H2z" />
+                            <path d="M12 7v15" />
+                            <path d="M12 7H7.5a2.5 2.5 0 1 1 0-5C10.5 2 12 7 12 7z" />
+                            <path d="M12 7h4.5a2.5 2.5 0 1 0 0-5C13.5 2 12 7 12 7z" />
+                        </svg>
+                        <div class="badge-check">✓</div>
+                    </div>
+                    Regalo
+                </button>
+
             </div>
         </div>
 
@@ -694,7 +899,7 @@
     <script>
         // ESTADO Y LÓGICA DE AUDIO
         const savedSections = JSON.parse(localStorage.getItem('rumbaCompletedSections'));
-        const completedSections = savedSections || { 1: false, 2: false, 3: false };
+        const completedSections = savedSections || { 1: false, 2: false, 3: false, 4: false };
         let currentStep = 1;
         let audioCtx = null;
         let audioUnlocked = false;
@@ -704,7 +909,7 @@
         }
 
         function restoreCompletedUI() {
-            for (let step = 1; step <= 3; step++) {
+            for (let step = 1; step <= 4; step++) {
                 if (completedSections[step]) {
                     document.getElementById(`btn-tab-${step}`).classList.add('completed');
                 }
@@ -757,26 +962,45 @@
             }
         }
 
-        // LÓGICA DE SCROLL (Solo para vista Inicio)
+        // LÓGICA DE SCROLL: Inicio se completa al revisar prácticamente todo el contenido.
         const viewport = document.getElementById('viewport');
-        viewport.addEventListener('scroll', () => {
-            const scrollPosition = viewport.scrollTop + viewport.clientHeight;
-            const scrollHeight = viewport.scrollHeight;
+        let homeScrollCompletionTriggered = false;
 
-            if (scrollHeight - scrollPosition <= 30) {
-                if (currentStep === 1 && !completedSections[1]) {
-                    completedSections[1] = true;
-                    document.getElementById('btn-tab-1').classList.add('completed');
-                    saveState();
-                    playBeep();
-                    updateProgress();
-                    // Al terminar de revisar la primera sección, activar automáticamente la guía hacia Asistencia
-                    setTimeout(() => {
-                        iniciarTour(1);
-                    }, 400);
-                }
+        function updateHomeScrollProgress() {
+            if (currentStep !== 1) return;
+
+            const maxScroll = Math.max(1, viewport.scrollHeight - viewport.clientHeight);
+            const rawProgress = Math.min(100, Math.max(0, (viewport.scrollTop / maxScroll) * 100));
+            const percent = Math.round(rawProgress);
+
+            const fill = document.getElementById('home-scroll-fill');
+            const label = document.getElementById('home-scroll-percent');
+            if (fill) fill.style.width = percent + '%';
+            if (label) label.innerText = percent + '%';
+
+            // Se considera revisado al llegar al 92% o al final real del scroll.
+            const reachedEnd = (maxScroll - viewport.scrollTop) <= 12 || rawProgress >= 92;
+
+            if (reachedEnd && !completedSections[1] && !homeScrollCompletionTriggered) {
+                homeScrollCompletionTriggered = true;
+                completedSections[1] = true;
+                document.getElementById('btn-tab-1').classList.add('completed');
+                saveState();
+                playBeep();
+                updateProgress();
+
+                const completeMessage = document.getElementById('home-complete-message');
+                if (completeMessage) completeMessage.classList.add('show');
+
+                // La acción termina aquí: regresamos visualmente al inicio y mostramos
+                // inmediatamente el siguiente paso pendiente: Asistencia.
+                setTimeout(() => {
+                    iniciarTour();
+                }, 350);
             }
-        });
+        }
+
+        viewport.addEventListener('scroll', updateHomeScrollProgress, { passive: true });
 
         function switchSection(step) {
             currentStep = step;
@@ -789,12 +1013,24 @@
             });
 
             viewport.scrollTop = 0;
+            if (step === 1) {
+                homeScrollCompletionTriggered = !!completedSections[1];
+                const fill = document.getElementById('home-scroll-fill');
+                const label = document.getElementById('home-scroll-percent');
+                if (completedSections[1]) {
+                    if (fill) fill.style.width = '100%';
+                    if (label) label.innerText = '100%';
+                } else {
+                    if (fill) fill.style.width = '0%';
+                    if (label) label.innerText = '0%';
+                }
+            }
             updateProgress();
         }
 
         function updateProgress() {
             let completedCount = Object.values(completedSections).filter(Boolean).length;
-            let percentage = (completedCount / 3) * 100;
+            let percentage = (completedCount / 4) * 100;
             document.getElementById('progress-bar').style.width = percentage + '%';
             document.getElementById('current-step').innerText = completedCount;
         }
@@ -804,7 +1040,14 @@
             window.open(url, '_blank');
         }
 
+        // Oculta inmediatamente la guía solo al entrar a completar una acción (Asistencia, Dedicatoria o Regalo).
+        // En Inicio NO se aplica esta lógica: su guía permanece visible durante la explicación inicial.
+        function ocultarGuiaParaCompletar() {
+            cerrarTour();
+        }
+
         function enviarAsistencia() {
+            ocultarGuiaParaCompletar();
             const name = document.getElementById('guest-name').value;
             if (!name) {
                 alert('Por favor ingresa tu nombre');
@@ -818,14 +1061,16 @@
                 updateProgress();
             }
             alert('¡Gracias por confirmar tu asistencia!');
-            switchSection(3);
-            // Al confirmar asistencia, guiar automáticamente a Dedicatoria (paso 3 del tour)
+            // Cada acción completada vuelve al Inicio y abre la guía exactamente
+            // en el siguiente pendiente: Dedicatoria.
+            switchSection(1);
             setTimeout(() => {
-                iniciarTour(2);
-            }, 400);
+                iniciarTour();
+            }, 350);
         }
 
         function addMessage() {
+            ocultarGuiaParaCompletar();
             const msg = document.getElementById('guest-msg').value;
             if (!msg) return;
             const wall = document.getElementById('wall');
@@ -842,17 +1087,38 @@
                 saveState();
                 playBeep();
                 updateProgress();
+                // Después de completar la dedicatoria, volvemos al Inicio
+                // y señalamos la siguiente opción pendiente (Regalo).
+                switchSection(1);
+                setTimeout(() => {
+                    iniciarTour();
+                }, 400);
+            }
+        }
+
+        function confirmarRegalo() {
+            ocultarGuiaParaCompletar();
+            if (!completedSections[4]) {
+                completedSections[4] = true;
+                document.getElementById('btn-tab-4').classList.add('completed');
+                saveState();
+                playBeep();
+                updateProgress();
+                // Al terminar todo, nos quedamos en la página principal.
+                switchSection(1);
                 setTimeout(() => {
                     cerrarTour();
                 }, 400);
             }
+            alert('¡Gracias por elegir un regalo! 🎁');
         }
 
         // LÓGICA DEL TOUR TIPO JUEGO
         const pasosTour = [
             { id: 'tour-step-1', tab: 1, texto: 'Aquí verás el resumen y los detalles principales de la invitación.' },
             { id: 'tour-step-2', tab: 2, texto: 'Primero, confirma tu asistencia aquí. ¡Ingresa tu nombre y selecciona si asistirás!' },
-            { id: 'tour-step-3', tab: 3, texto: 'Déjale un mensaje bonito y tus felicitaciones en el muro.' }
+            { id: 'tour-step-3', tab: 3, texto: 'Déjale un mensaje bonito y tus felicitaciones en el muro.' },
+            { id: 'tour-step-4', tab: 4, texto: '¿Quieres hacerme un regalo? Aquí tienes algunas ideas. 🎁' }
         ];
 
         let pasoActual = 0;
@@ -867,7 +1133,9 @@
                     stepToStart = 1; // Paso 2: Asistencia
                 } else if (completedSections[1] && completedSections[2] && !completedSections[3]) {
                     stepToStart = 2; // Paso 3: Dedicatoria
-                } else if (completedSections[1] && completedSections[2] && completedSections[3]) {
+                } else if (completedSections[1] && completedSections[2] && completedSections[3] && !completedSections[4]) {
+                    stepToStart = 3; // Paso 4: Regalos
+                } else if (completedSections[1] && completedSections[2] && completedSections[3] && completedSections[4]) {
                     // Si ya completó todo, no se muestra automáticamente al recargar
                     return;
                 }
@@ -892,7 +1160,8 @@
             const contenedorIcono = document.getElementById(paso.id);
             const tabBtn = document.getElementById(`btn-tab-${paso.tab}`);
 
-            switchSection(paso.tab);
+            // El tour solo señala la opción pendiente en el Navbar; no cambia la página.
+            // Así la invitación permanece visualmente en Inicio mientras guía al usuario.
             contenedorIcono.classList.add('highlighted-icon');
             if (tabBtn) tabBtn.classList.add('active-tour-tab');
             document.getElementById('tour-text').innerText = paso.texto;
@@ -930,24 +1199,25 @@
                 }
             }
 
-            document.getElementById('btn-atras').style.visibility = index === 0 ? 'hidden' : 'visible';
+            // Paso 1: solo Siguiente centrado. Paso 2: Atrás + Siguiente. Paso 3: Atrás + Finalizar.
+            const btnAtras = document.getElementById('btn-atras');
+            const btnSiguiente = document.getElementById('btn-siguiente');
 
-            if (index === pasosTour.length - 1) {
-                document.getElementById('btn-siguiente').innerText = 'Finalizar';
+            if (index === 0) {
+                btnAtras.style.display = 'none';
+                btnSiguiente.innerText = 'Siguiente';
+            } else if (index === pasosTour.length - 1) {
+                btnAtras.style.display = 'inline-block';
+                btnSiguiente.innerText = 'Finalizar';
             } else {
-                document.getElementById('btn-siguiente').innerText = 'Siguiente';
+                btnAtras.style.display = 'inline-block';
+                btnSiguiente.innerText = 'Siguiente';
             }
         }
 
         function pasoSiguiente() {
-            if (pasoActual === 0 && !completedSections[1]) {
-                // Al avanzar desde Inicio, marcar Inicio como completado
-                completedSections[1] = true;
-                document.getElementById('btn-tab-1').classList.add('completed');
-                saveState();
-                updateProgress();
-            }
-
+            // El Inicio SOLO se completa mediante scroll. El botón del tour no debe
+            // saltarse esa acción.
             if (pasoActual < pasosTour.length - 1) {
                 pasoActual++;
                 mostrarPaso(pasoActual);
@@ -975,11 +1245,13 @@
         function reiniciarTour() {
             localStorage.removeItem('pasosRumbaTour');
             localStorage.removeItem('rumbaCompletedSections');
-            for (let step = 1; step <= 3; step++) {
+            for (let step = 1; step <= 4; step++) {
                 completedSections[step] = false;
                 document.getElementById(`btn-tab-${step}`).classList.remove('completed');
             }
+            homeScrollCompletionTriggered = false;
             updateProgress();
+            switchSection(1);
             iniciarTour(0);
         }
 
@@ -992,6 +1264,8 @@
 
         window.onload = function () {
             restoreCompletedUI();
+            homeScrollCompletionTriggered = !!completedSections[1];
+            updateHomeScrollProgress();
             setTimeout(iniciarTour, 600);
         };
     </script>
